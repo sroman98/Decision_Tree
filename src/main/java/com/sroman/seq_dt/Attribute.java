@@ -1,0 +1,39 @@
+package com.sroman.seq_dt;
+
+import java.util.HashMap;
+
+public class Attribute {
+    final private String name;
+    final private HashMap<String,Integer> values;
+    private Double entropy;
+    
+    public Attribute(String[][] data, int index) {
+        name = data[0][index];
+        values = new HashMap<>();
+        for(int i = 1; i < data.length; i++) {
+            String value = data[i][index];
+            Integer count = values.get(value);
+            if(count == null)
+                values.put(value, 1);
+            else
+                values.replace(value, ++count);
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Double getEntropy() {
+        return entropy;
+    }
+    
+    public HashMap<String, Integer> getValues() {
+        return values;
+    }
+    
+    public void setEntropy(double entropy) {
+        this.entropy = entropy;
+    }
+     
+}
