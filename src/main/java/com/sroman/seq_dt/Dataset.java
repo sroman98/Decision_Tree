@@ -1,9 +1,7 @@
 package com.sroman.seq_dt;
 
-import static java.lang.Double.doubleToLongBits;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Dataset {
     private final String[][] data;
@@ -13,6 +11,7 @@ public class Dataset {
     private final int instances;
     
     private Double entropy;
+    private HashMap<String,Double> subentropies;
     
     public Dataset(String[][] data) {
         this.data = data;
@@ -33,13 +32,8 @@ public class Dataset {
     }
     
     public HashMap<String,Double> getSubentropies() {
-        HashMap<String,Double> subentropies = new HashMap<>();
-        for(int i = 0; i < x.length; i++) {
-            Attribute a = x[i];
-            if(a.getEntropy() == null)
-                calculateSubentropy(a, i);
-            subentropies.put(a.getName(), a.getEntropy());
-        }
+        if(subentropies == null)
+            subentropies = calculateSubentropies();
         return subentropies;
     }
     
@@ -54,7 +48,6 @@ public class Dataset {
     }
     
     private double calculateSubentropy(Attribute a, int column) {
-        HashMap<String, Integer>  values = a.getValues();
         double sum = 0.0;
         for(Map.Entry entry : a.getValues().entrySet()) {
             String value = (String)entry.getKey();
@@ -74,8 +67,19 @@ public class Dataset {
             Dataset subdataset = new Dataset(subdata);
             double relativeEntropy = ((double)count/instances) * subdataset.getEntropy();
             sum += relativeEntropy;
-        };
+        }
         a.setEntropy(sum);
         return a.getEntropy();
+    }
+    
+    private HashMap<String, Double> calculateSubentropies() {
+        HashMap<String,Double> entropies = new HashMap<>();
+        for(int i = 0; i < x.length; i++) {
+            Attribute a = x[i];
+            if(a.getEntropy() == null)
+                calculateSubentropy(a, i);
+            entropies.put(a.getName(), a.getEntropy());
+        }
+        return entropies;
     }
 }

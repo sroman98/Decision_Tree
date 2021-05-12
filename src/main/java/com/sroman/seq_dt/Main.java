@@ -12,7 +12,7 @@ public class Main {
         Dataset dataset = new Dataset(data);
         System.out.println("System entropy:");
         System.out.println(dataset.getEntropy());
-        System.out.println("Subentropies:");
+        System.out.println("\nSubentropies:");
         for(Map.Entry subentropy : dataset.getSubentropies().entrySet()) {
             System.out.println(subentropy.getKey() + ": " + subentropy.getValue());
         }
