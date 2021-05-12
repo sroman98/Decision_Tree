@@ -6,6 +6,7 @@ public class Attribute {
     final private String name;
     final private HashMap<String,Integer> values;
     private Double entropy;
+    private Double gain;
     
     public Attribute(String[][] data, int index) {
         name = data[0][index];
@@ -30,6 +31,14 @@ public class Attribute {
     
     public HashMap<String, Integer> getValues() {
         return values;
+    }
+
+    public Double getGain() {
+        return gain;
+    }
+
+    public void setGain(Double gain) {
+        this.gain = gain;
     }
     
     public void setEntropy(double entropy) {

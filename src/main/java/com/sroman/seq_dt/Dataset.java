@@ -12,6 +12,7 @@ public class Dataset {
     
     private Double entropy;
     private HashMap<String,Double> subentropies;
+    private HashMap<String,Double> gains;
     
     public Dataset(String[][] data) {
         this.data = data;
@@ -32,9 +33,31 @@ public class Dataset {
     }
     
     public HashMap<String,Double> getSubentropies() {
-        if(subentropies == null)
+        if(subentropies == null) {
+            getEntropy();
             subentropies = calculateSubentropies();
+        }
         return subentropies;
+    }
+    
+    public HashMap<String,Double> getGains() {
+        if(gains == null) {
+            getSubentropies();
+            gains = new HashMap<>();
+            for(Attribute a : x)
+                gains.put(a.getName(), a.getGain());
+        }
+        return gains;
+    }
+    
+    public Map.Entry<String,Double> getGreatestGain() {
+        getGains();
+        Map.Entry<String,Double> greatest = gains.entrySet().iterator().next();
+        for(Map.Entry<String,Double> gain: gains.entrySet()) {
+            if(gain.getValue() > greatest.getValue())
+                greatest = gain;
+        }
+        return greatest;
     }
     
     private double calculateSystemEntropy() {
@@ -69,6 +92,7 @@ public class Dataset {
             sum += relativeEntropy;
         }
         a.setEntropy(sum);
+        a.setGain(entropy - sum);
         return a.getEntropy();
     }
     
