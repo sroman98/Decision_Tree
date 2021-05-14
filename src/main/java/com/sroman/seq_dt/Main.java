@@ -5,7 +5,7 @@ import java.util.Map;
 public class Main {
 
     public static void main(String args[]) {
-        final String[][] data = Helpers.getMatrixFromCSV("weather.csv");
+        final String[][] data = Helpers.getMatrixFromCSV("titanic.csv");
         Dataset dataset = new Dataset(data);
         recursiveEntropy(dataset, 0);
     }
@@ -15,7 +15,7 @@ public class Main {
                 for(int i = 0; i < iter; i++)
                     tabs += "\t\t";
                 
-        if (iter == 3) {
+        if (iter == 4) {
             System.out.println(tabs + "DONE");
         } else if (dataset.getEntropy() == 0) {
             System.out.println(tabs + dataset.getYValue());
