@@ -38,4 +38,22 @@ public class Helpers {
         }
         return matrix;
     }
+    
+    static String[][] removeCol(String[][] data, int col) {
+        int rows = data.length;
+        int cols = data[0].length;
+
+        String[][] newData = new String[rows][cols - 1];
+
+        for (int i = 0; i < rows; i++) {
+            int curr = 0;
+            for (int j = 0; j < cols; j++) {
+                if (j != col) {
+                    newData[i][curr++] = data[i][j];
+                }
+            }
+        }
+
+        return newData;
+    }
 }

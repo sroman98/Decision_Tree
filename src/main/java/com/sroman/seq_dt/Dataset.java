@@ -60,6 +60,19 @@ public class Dataset {
         return greatest;
     }
     
+    public Attribute getGreatestGainAttribute() {
+        String attributeName = getGreatestGain().getKey();
+        for(Attribute a : x) {
+            if(a.getName().equals(attributeName)) 
+                return a;
+        }
+        return null;
+    }
+    
+    public String getYValue() {
+        return y.getValues().keySet().iterator().next();
+    }
+    
     private double calculateSystemEntropy() {
         double res = 0.0;
         Integer[] counts = y.getValues().values().stream().toArray(Integer[]::new);
@@ -76,18 +89,20 @@ public class Dataset {
             String value = (String)entry.getKey();
             int count = (int)entry.getValue();
             
-            String[][] subdata = new String[count + 1][2];
-            subdata[0][0] = headers[column];
-            subdata[0][1] = headers[headers.length - 1];
+            String[][] subdata = new String[count + 1][headers.length - 1];
+            String[][] dataWithoutCol = Helpers.removeCol(data, column);
+            subdata[0] = dataWithoutCol[0];
+            
             int indx = 1;
             for(int i = 1; i < data.length; i++) {
                 if(data[i][column].equals(value)) {
-                    subdata[indx][0] = data[i][column];
-                    subdata[indx][1] = data[i][headers.length - 1];
+                    subdata[indx] = dataWithoutCol[i];
                     indx++;
                 }
             }
+            
             Dataset subdataset = new Dataset(subdata);
+            a.putSubdataset(value, subdataset);
             double relativeEntropy = ((double)count/instances) * subdataset.getEntropy();
             sum += relativeEntropy;
         }
