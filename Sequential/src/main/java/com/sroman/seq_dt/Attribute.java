@@ -1,14 +1,13 @@
 package com.sroman.seq_dt;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Attribute {
     final private String name;
     final private HashMap<String,Integer> values;
     private Double entropy;
     private Double gain;
-    private HashMap<String,Dataset> subdatasets;
+    private final HashMap<String,Dataset> subdatasets;
     
     public Attribute(String[][] data, int index) {
         name = data[0][index];

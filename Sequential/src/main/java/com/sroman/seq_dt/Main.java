@@ -1,36 +1,40 @@
 package com.sroman.seq_dt;
 
+import hu.webarticum.treeprinter.ListingTreePrinter;
+import hu.webarticum.treeprinter.SimpleTreeNode;
+
 public class Main {
 
     public static void main(String args[]) {
         final String[][] data = Helpers.getMatrixFromCSV("../weather.csv");
         Dataset dataset = new Dataset(data);
-        Node tree = createTree(dataset);
+        SimpleTreeNode tree = createTree(dataset);
+        new ListingTreePrinter().print(tree);
     }
 
-    static Node createTree(Dataset dataset) {
+    static SimpleTreeNode createTree(Dataset dataset) {
         return recursiveEntropy(dataset, 0, null);
     }
 
-    static Node recursiveEntropy(Dataset dataset, int iter, Node parent) {
+    static SimpleTreeNode recursiveEntropy(Dataset dataset, int iter, SimpleTreeNode parent) {
         if (dataset.getEntropy() == 0) {
-            Node node = new Node(dataset.getYValue());
+            SimpleTreeNode node = new SimpleTreeNode(dataset.getYValue());
             if (parent == null)
                 return node;
             else {
                 parent.addChild(node);
                 return parent;
             }
-        } else if (iter == 1) {
+        } else if (iter == 3) {
             dataset.getPartialYValues().entrySet().forEach(value -> {
-                parent.addChild(new Node(value));
+                parent.addChild(new SimpleTreeNode(value.getKey() + " => " + value.getValue()));
             });
             return parent;
         } else {
             Attribute a = dataset.getGreatestGainAttribute();
-            Node node = new Node(a.getName());
+            SimpleTreeNode node = new SimpleTreeNode(a.getName());
             a.getSubdatasets().entrySet().forEach(e -> {
-                Node child = new Node(e.getKey());
+                SimpleTreeNode child = new SimpleTreeNode(e.getKey());
                 node.addChild(recursiveEntropy(e.getValue(), iter + 1, child));
             });
             if (parent == null) {

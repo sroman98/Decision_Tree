@@ -47,9 +47,9 @@ public class Dataset {
     
     public HashMap<String, Float> getPartialYValues() {
         HashMap<String, Float> map = new HashMap<>();
-        for(Map.Entry<String, Integer> value : y.getValues().entrySet()) {
+        y.getValues().entrySet().forEach(value -> {
             map.put(value.getKey(), (float)value.getValue()/instances);
-        }
+        });
         return map;
     }
     
