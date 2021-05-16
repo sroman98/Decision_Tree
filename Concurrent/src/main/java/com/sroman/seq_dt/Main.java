@@ -12,7 +12,7 @@ public class Main {
     public static void main(String args[]) {
         //Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
-        String datasetName = "weather";//scanner.nextLine();
+        String datasetName = "titanic";//scanner.nextLine();
         System.out.println("Enter tree's max depth:");
         int maxDepth = 10;//scanner.nextInt();
 
@@ -48,9 +48,9 @@ public class Main {
             try {
                 a = dataset.getGreatestGainAttribute();
                 SimpleTreeNode node = new SimpleTreeNode(a.getName());
-                a.getSubdatasets().entrySet().forEach(e -> {
-                    SimpleTreeNode child = new SimpleTreeNode(e.getKey());
-                    node.addChild(recursiveEntropy(e.getValue(), iter + 1, maxLevel, child));
+                a.getValues().forEach(value -> {
+                    SimpleTreeNode child = new SimpleTreeNode(value.name);
+                    node.addChild(recursiveEntropy(value.subdataset, iter + 1, maxLevel, child));
                 });
                 if (parent == null) {
                     return node;

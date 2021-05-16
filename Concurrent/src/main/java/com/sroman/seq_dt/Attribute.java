@@ -1,25 +1,27 @@
 package com.sroman.seq_dt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Attribute {
     final private String name;
-    final private HashMap<String,Integer> values;
+    final private List<Value> values;
     private Double entropy;
     private Double gain;
-    private final HashMap<String,Dataset> subdatasets;
     
-    public Attribute(String[][] data, int index) {
-        name = data[0][index];
-        subdatasets = new HashMap<>();
-        values = new HashMap<>();
+    public Attribute(String[][] data, int col) {
+        name = data[0][col];
+        values = new ArrayList<>();
         for(int i = 1; i < data.length; i++) {
-            String value = data[i][index];
-            Integer count = values.get(value);
-            if(count == null)
-                values.put(value, 1);
-            else
-                values.replace(value, ++count);
+            String value = data[i][col];
+            Value newValue = new Value(value, 1);
+            if(!values.contains(newValue))
+                values.add(newValue);
+            else {
+                int index = values.indexOf(newValue);
+                values.get(index).count = values.get(index).count + 1;
+            }
         }
     }
 
@@ -31,7 +33,7 @@ public class Attribute {
         return entropy;
     }
     
-    public HashMap<String, Integer> getValues() {
+    public List<Value> getValues() {
         return values;
     }
 
@@ -45,14 +47,6 @@ public class Attribute {
     
     public void setEntropy(double entropy) {
         this.entropy = entropy;
-    }
-    
-    public void putSubdataset(String key, Dataset subdataset) {
-        subdatasets.put(key, subdataset);
-    }
-
-    public HashMap<String, Dataset> getSubdatasets() {
-        return subdatasets;
     }
 
 }
