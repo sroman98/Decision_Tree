@@ -1,35 +1,43 @@
 package com.sroman.seq_dt;
 
-import java.text.DecimalFormat;
-import java.util.Map;
-
 public class Main {
 
     public static void main(String args[]) {
-        final String[][] data = Helpers.getMatrixFromCSV("../titanic.csv");
+        final String[][] data = Helpers.getMatrixFromCSV("../weather.csv");
         Dataset dataset = new Dataset(data);
-        recursiveEntropy(dataset, 0);
+        Node tree = createTree(dataset);
     }
 
-    static void recursiveEntropy(Dataset dataset, int iter) {
-        String tabs = "";
-        for (int i = 0; i < iter; i++) {
-            tabs += "\t\t";
-        }
+    static Node createTree(Dataset dataset) {
+        return recursiveEntropy(dataset, 0, null);
+    }
+
+    static Node recursiveEntropy(Dataset dataset, int iter, Node parent) {
         if (dataset.getEntropy() == 0) {
-            System.out.println(tabs + dataset.getYValue());
-        } else if (iter == 4) {
-            DecimalFormat df = new DecimalFormat();
-            df.setMaximumFractionDigits(2);
-            for (Map.Entry<String, Float> value : dataset.getPartialYValues().entrySet()) {
-                System.out.println(tabs + value.getKey() + " " + df.format(value.getValue()));
+            Node node = new Node(dataset.getYValue());
+            if (parent == null)
+                return node;
+            else {
+                parent.addChild(node);
+                return parent;
             }
+        } else if (iter == 1) {
+            dataset.getPartialYValues().entrySet().forEach(value -> {
+                parent.addChild(new Node(value));
+            });
+            return parent;
         } else {
             Attribute a = dataset.getGreatestGainAttribute();
-            System.out.println(tabs + a.getName() + "");
-            for (Map.Entry<String, Dataset> e : a.getSubdatasets().entrySet()) {
-                System.out.println(tabs + "\t" + e.getKey() + ":");
-                recursiveEntropy(e.getValue(), iter + 1);
+            Node node = new Node(a.getName());
+            a.getSubdatasets().entrySet().forEach(e -> {
+                Node child = new Node(e.getKey());
+                node.addChild(recursiveEntropy(e.getValue(), iter + 1, child));
+            });
+            if (parent == null) {
+                return node;
+            } else {
+                parent.addChild(node);
+                return parent;
             }
         }
     }
