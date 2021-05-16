@@ -32,34 +32,6 @@ public class Dataset {
         return entropy;
     }
     
-    public HashMap<String,Double> getSubentropies() {
-        if(subentropies == null) {
-            getEntropy();
-            subentropies = calculateSubentropies();
-        }
-        return subentropies;
-    }
-    
-    public HashMap<String,Double> getGains() {
-        if(gains == null) {
-            getSubentropies();
-            gains = new HashMap<>();
-            for(Attribute a : x)
-                gains.put(a.getName(), a.getGain());
-        }
-        return gains;
-    }
-    
-    public Map.Entry<String,Double> getGreatestGain() {
-        getGains();
-        Map.Entry<String,Double> greatest = gains.entrySet().iterator().next();
-        for(Map.Entry<String,Double> gain: gains.entrySet()) {
-            if(gain.getValue() > greatest.getValue())
-                greatest = gain;
-        }
-        return greatest;
-    }
-    
     public Attribute getGreatestGainAttribute() {
         String attributeName = getGreatestGain().getKey();
         for(Attribute a : x) {
@@ -71,6 +43,42 @@ public class Dataset {
     
     public String getYValue() {
         return y.getValues().keySet().iterator().next();
+    }
+    
+    public HashMap<String, Float> getPartialYValues() {
+        HashMap<String, Float> map = new HashMap<>();
+        for(Map.Entry<String, Integer> value : y.getValues().entrySet()) {
+            map.put(value.getKey(), (float)value.getValue()/instances);
+        }
+        return map;
+    }
+    
+    private HashMap<String,Double> getSubentropies() {
+        if(subentropies == null) {
+            getEntropy();
+            subentropies = calculateSubentropies();
+        }
+        return subentropies;
+    }
+    
+    private HashMap<String,Double> getGains() {
+        if(gains == null) {
+            getSubentropies();
+            gains = new HashMap<>();
+            for(Attribute a : x)
+                gains.put(a.getName(), a.getGain());
+        }
+        return gains;
+    }
+    
+    private Map.Entry<String,Double> getGreatestGain() {
+        getGains();
+        Map.Entry<String,Double> greatest = gains.entrySet().iterator().next();
+        for(Map.Entry<String,Double> gain: gains.entrySet()) {
+            if(gain.getValue() > greatest.getValue())
+                greatest = gain;
+        }
+        return greatest;
     }
     
     private double calculateSystemEntropy() {
@@ -121,4 +129,5 @@ public class Dataset {
         }
         return entropies;
     }
+    
 }
