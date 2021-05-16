@@ -3,16 +3,16 @@ package com.sroman.seq_dt;
 import hu.webarticum.treeprinter.BorderTreeNodeDecorator;
 import hu.webarticum.treeprinter.SimpleTreeNode;
 import hu.webarticum.treeprinter.TraditionalTreePrinter;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 public class Main {
 
     public static void main(String args[]) {
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
-        String datasetName = scanner.nextLine();
+        String datasetName = "weather";//scanner.nextLine();
         System.out.println("Enter tree's max depth:");
-        int maxDepth = scanner.nextInt();
+        int maxDepth = 10;//scanner.nextInt();
         
         final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);

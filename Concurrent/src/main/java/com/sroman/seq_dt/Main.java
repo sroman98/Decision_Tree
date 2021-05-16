@@ -3,17 +3,19 @@ package com.sroman.seq_dt;
 import hu.webarticum.treeprinter.BorderTreeNodeDecorator;
 import hu.webarticum.treeprinter.SimpleTreeNode;
 import hu.webarticum.treeprinter.TraditionalTreePrinter;
-import java.util.Scanner;
+//import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 
     public static void main(String args[]) {
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
-        String datasetName = scanner.nextLine();
+        String datasetName = "weather";//scanner.nextLine();
         System.out.println("Enter tree's max depth:");
-        int maxDepth = scanner.nextInt();
-        
+        int maxDepth = 10;//scanner.nextInt();
+
         final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
         SimpleTreeNode tree = createTree(dataset, maxDepth);
@@ -21,17 +23,18 @@ public class Main {
     }
 
     static SimpleTreeNode createTree(Dataset dataset, int maxLevel) {
-        if(maxLevel > dataset.getNumberOfAttributes())
+        if (maxLevel > dataset.getNumberOfAttributes()) {
             maxLevel = dataset.getNumberOfAttributes();
+        }
         return recursiveEntropy(dataset, 0, maxLevel, null);
     }
 
     static SimpleTreeNode recursiveEntropy(Dataset dataset, int iter, int maxLevel, SimpleTreeNode parent) {
         if (dataset.getEntropy() == 0) {
             SimpleTreeNode node = new SimpleTreeNode(dataset.getYValue());
-            if (parent == null)
+            if (parent == null) {
                 return node;
-            else {
+            } else {
                 parent.addChild(node);
                 return parent;
             }
@@ -41,17 +44,24 @@ public class Main {
             });
             return parent;
         } else {
-            Attribute a = dataset.getGreatestGainAttribute();
-            SimpleTreeNode node = new SimpleTreeNode(a.getName());
-            a.getSubdatasets().entrySet().forEach(e -> {
-                SimpleTreeNode child = new SimpleTreeNode(e.getKey());
-                node.addChild(recursiveEntropy(e.getValue(), iter + 1, maxLevel, child));
-            });
-            if (parent == null) {
-                return node;
-            } else {
-                parent.addChild(node);
-                return parent;
+            Attribute a;
+            try {
+                a = dataset.getGreatestGainAttribute();
+                SimpleTreeNode node = new SimpleTreeNode(a.getName());
+                a.getSubdatasets().entrySet().forEach(e -> {
+                    SimpleTreeNode child = new SimpleTreeNode(e.getKey());
+                    node.addChild(recursiveEntropy(e.getValue(), iter + 1, maxLevel, child));
+                });
+                if (parent == null) {
+                    return node;
+                } else {
+                    parent.addChild(node);
+                    return parent;
+                }
+            } catch (InterruptedException ex) {
+                System.out.println("INTERRUPTED");
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
         }
     }
