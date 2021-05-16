@@ -98,37 +98,9 @@ public class Dataset {
         return res * -1;
     }
     
-//    private double calculateSubentropy(Attribute a, int column) {
-//        double sum = 0.0;
-//        for(Map.Entry entry : a.getValues().entrySet()) {
-//            String value = (String)entry.getKey();
-//            int count = (int)entry.getValue();
-//            
-//            String[][] subdata = new String[count + 1][headers.length - 1];
-//            String[][] dataWithoutCol = Helpers.removeCol(data, column);
-//            subdata[0] = dataWithoutCol[0];
-//            
-//            int indx = 1;
-//            for(int i = 1; i < data.length; i++) {
-//                if(data[i][column].equals(value)) {
-//                    subdata[indx] = dataWithoutCol[i];
-//                    indx++;
-//                }
-//            }
-//            
-//            Dataset subdataset = new Dataset(subdata);
-//            a.putSubdataset(value, subdataset);
-//            double relativeEntropy = ((double)count/instances) * subdataset.getEntropy();
-//            sum += relativeEntropy;
-//        }
-//        a.setEntropy(sum);
-//        a.setGain(entropy - sum);
-//        return a.getEntropy();
-//    }
-    
     private HashMap<String, Double> calculateSubentropies() throws InterruptedException {
         HashMap<String,Double> entropies = new HashMap<>();
-        ExecutorService pool = Executors.newCachedThreadPool();//Executors.newFixedThreadPool(10);
+        ExecutorService pool = Executors.newCachedThreadPool();
         for(int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if(a.getEntropy() == null)
