@@ -53,6 +53,10 @@ public class Dataset {
         return map;
     }
     
+    public int getNumberOfAttributes() {
+        return x.length;
+    }
+    
     private HashMap<String,Double> getSubentropies() {
         if(subentropies == null) {
             getEntropy();
