@@ -5,7 +5,7 @@ import java.util.Map;
 public class Main {
 
     public static void main(String args[]) {
-        final String[][] data = Helpers.getMatrixFromCSV("titanic.csv");
+        final String[][] data = Helpers.getMatrixFromCSV("../titanic.csv");
         Dataset dataset = new Dataset(data);
         recursiveEntropy(dataset, 0);
     }
