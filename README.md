@@ -1,5 +1,4 @@
-# Sequential_DecisionTree
+# Decision Tree
 
 Datasets gotten from:
-https://www.openml.org/d/40945
-Class' Drive Folder
+https://www.openml.org/d/40945 & Class' Drive Folder
