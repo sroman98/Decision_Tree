@@ -3,13 +3,20 @@ package com.sroman.seq_dt;
 import hu.webarticum.treeprinter.BorderTreeNodeDecorator;
 import hu.webarticum.treeprinter.SimpleTreeNode;
 import hu.webarticum.treeprinter.TraditionalTreePrinter;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String args[]) {
-        final String[][] data = Helpers.getMatrixFromCSV("../weather.csv");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter dataset's name:");
+        String datasetName = scanner.nextLine();
+        System.out.println("Enter tree's max depth:");
+        int maxDepth = scanner.nextInt();
+        
+        final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
-        SimpleTreeNode tree = createTree(dataset, 4);
+        SimpleTreeNode tree = createTree(dataset, maxDepth);
         new TraditionalTreePrinter().print(new BorderTreeNodeDecorator(tree));
     }
 
