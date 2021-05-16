@@ -1,15 +1,16 @@
 package com.sroman.seq_dt;
 
-import hu.webarticum.treeprinter.ListingTreePrinter;
+import hu.webarticum.treeprinter.BorderTreeNodeDecorator;
 import hu.webarticum.treeprinter.SimpleTreeNode;
+import hu.webarticum.treeprinter.TraditionalTreePrinter;
 
 public class Main {
 
     public static void main(String args[]) {
-        final String[][] data = Helpers.getMatrixFromCSV("../titanic.csv");
+        final String[][] data = Helpers.getMatrixFromCSV("../weather.csv");
         Dataset dataset = new Dataset(data);
         SimpleTreeNode tree = createTree(dataset, 4);
-        new ListingTreePrinter().print(tree);
+        new TraditionalTreePrinter().print(new BorderTreeNodeDecorator(tree));
     }
 
     static SimpleTreeNode createTree(Dataset dataset, int maxLevel) {
