@@ -83,11 +83,10 @@ public class Dataset {
 
     private void calculateSubentropies() throws InterruptedException {
         calculateSystemEntropy();
-        ForkJoinPool commonPool = ForkJoinPool.commonPool();
         for (int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
-                double relativeEntropy = commonPool.invoke(new SubentropyRecursiveTask(a,i,this));
+                double relativeEntropy = Helpers.getCommonPool().invoke(new SubentropyRecursiveTask(a,i,this));
                 a.augmentEntropy(relativeEntropy);
                 a.reduceGain(entropy, relativeEntropy);
             }

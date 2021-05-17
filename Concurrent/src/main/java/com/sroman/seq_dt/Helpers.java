@@ -4,8 +4,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 public class Helpers {
+    private static ForkJoinPool commonPool;
+    
+    public static ForkJoinPool getCommonPool() {
+        if(commonPool == null)
+            commonPool = ForkJoinPool.commonPool();
+        return commonPool;
+    }
+    
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
     }

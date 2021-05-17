@@ -16,5 +16,4 @@ public class Value {
         return ((Value)obj).name.equals(name);
     }
     
-    
 }

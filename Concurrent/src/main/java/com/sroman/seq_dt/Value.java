@@ -16,5 +16,7 @@ public class Value {
         return ((Value)obj).name.equals(name);
     }
     
-    
+    public double getRelativeEntropy() {
+        return relativeEntropy;
+    }
 }

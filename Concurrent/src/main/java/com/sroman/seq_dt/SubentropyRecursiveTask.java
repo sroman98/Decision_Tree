@@ -7,7 +7,8 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
 public class SubentropyRecursiveTask extends RecursiveTask<Double> {
-
+    private final int THRESHOLD = 3;
+    
     private final int column;
     private final Dataset dataset;
     private final Attribute a;
@@ -29,10 +30,10 @@ public class SubentropyRecursiveTask extends RecursiveTask<Double> {
 
     @Override
     protected Double compute() {
-        if (values.size() > 1) {
+        if (values.size() > THRESHOLD) {
             return ForkJoinTask.invokeAll(createSubtasks()).stream().mapToDouble(ForkJoinTask::join).sum();
         } else {
-            return processing(values.get(0));
+            return processing();
         }
     }
 
@@ -47,7 +48,8 @@ public class SubentropyRecursiveTask extends RecursiveTask<Double> {
         return subtasks;
     }
 
-    private Double processing(Value value) {
+    private Double processing() {
+        for(Value value : values) {
         String name = value.name;
         int count = value.count;
 
@@ -67,7 +69,8 @@ public class SubentropyRecursiveTask extends RecursiveTask<Double> {
         double relativeEntropy = ((double) count / dataset.getNumOfInstances()) * subdataset.getEntropy();
         value.subdataset = subdataset;
         value.relativeEntropy = relativeEntropy;
+        }
         
-        return relativeEntropy;
+        return values.stream().mapToDouble(Value::getRelativeEntropy).sum();
     }
 }
