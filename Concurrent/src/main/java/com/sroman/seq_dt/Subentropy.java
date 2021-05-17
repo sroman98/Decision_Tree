@@ -1,23 +1,17 @@
 package com.sroman.seq_dt;
 
-import java.util.Map;
-
 public class Subentropy implements Runnable {
-    private final Attribute a;
     private final int column;
     private final int instances;
     private final int numAttributes;
     private final String[][] data;
-    private final Double entropy;
     private final Value value;
     
-    public Subentropy(Attribute a, int column, int instances, int numAttributes, String[][] data, Double entropy, Value value) {
-        this.a = a;
+    public Subentropy(int column, int instances, int numAttributes, String[][] data, Value value) {
         this.column = column;
         this.instances = instances;
         this.numAttributes = numAttributes;
         this.data = data;
-        this.entropy = entropy;
         this.value = value;
     }
     

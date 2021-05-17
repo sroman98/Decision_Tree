@@ -1,7 +1,6 @@
 package com.sroman.seq_dt;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +14,6 @@ public class Dataset {
     private final int instances;
 
     private Double entropy;
-    //private HashMap<String,Double> subentropies;
-    //private HashMap<String,Double> gains;
 
     public Dataset(String[][] data) {
         this.data = data;
@@ -84,21 +81,18 @@ public class Dataset {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
                 for (Value value : a.getValues()) {
-                    pool.execute(new Subentropy(a, i, instances, getNumberOfAttributes(), data.clone(), entropy, value));
+                    pool.execute(new Subentropy(i, instances, x.length, data, value));
                 }
             }
         }
         pool.shutdown();
-        pool.awaitTermination(30, TimeUnit.SECONDS);
-        for (int i = 0; i < x.length; i++) {
-            Attribute a = x[i];
+        pool.awaitTermination(10, TimeUnit.SECONDS);
+        for (Attribute a : x) {
             double sum = 0.0;
-            for (Value value : a.getValues()) {
+            for (Value value : a.getValues())
                 sum += value.relativeEntropy;
-            }
             a.setEntropy(sum);
             a.setGain(entropy - sum);
         }
     }
-
 }
