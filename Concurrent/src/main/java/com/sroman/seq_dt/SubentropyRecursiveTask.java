@@ -1,55 +1,53 @@
 package com.sroman.seq_dt;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.RecursiveTask;
 
-public class SubentropyRecursiveAction extends RecursiveAction {
+public class SubentropyRecursiveTask extends RecursiveTask<Double> {
 
     private final int column;
     private final Dataset dataset;
     private final Attribute a;
-    private final int start;
-    private final int finish;
+    private final List<Value> values;
 
-    public SubentropyRecursiveAction(Attribute a, int column, Dataset dataset) {
+    public SubentropyRecursiveTask(Attribute a, int column, Dataset dataset) {
         this.a = a;
         this.column = column;
         this.dataset = dataset;
-        this.start = 0;
-        this.finish = a.getValues().size();
+        this.values = a.getValues();
     }
 
-    public SubentropyRecursiveAction(SubentropyRecursiveAction s, int start, int finish) {
+    public SubentropyRecursiveTask(SubentropyRecursiveTask s, List<Value> values) {
         this.a = s.a;
         this.column = s.column;
         this.dataset = s.dataset;
-        this.start = start;
-        this.finish = finish;
+        this.values = values;
     }
 
     @Override
-    protected void compute() {
-        if (finish - start > 1) {
-            ForkJoinTask.invokeAll(createSubtasks());
+    protected Double compute() {
+        if (values.size() > 1) {
+            return ForkJoinTask.invokeAll(createSubtasks()).stream().mapToDouble(ForkJoinTask::join).sum();
         } else {
-            processing(a.getValues().get(start));
+            return processing(values.get(0));
         }
     }
 
-    private List<SubentropyRecursiveAction> createSubtasks() {
-        List<SubentropyRecursiveAction> subtasks = new ArrayList<>();
+    private Collection<SubentropyRecursiveTask> createSubtasks() {
+        List<SubentropyRecursiveTask> subtasks = new ArrayList<>();
 
-        int mid = (start + finish) / 2;
+        int mid = values.size() / 2;
 
-        subtasks.add(new SubentropyRecursiveAction(this, start, mid));
-        subtasks.add(new SubentropyRecursiveAction(this, mid, finish));
+        subtasks.add(new SubentropyRecursiveTask(this, values.subList(0, mid)));
+        subtasks.add(new SubentropyRecursiveTask(this, values.subList(mid, values.size())));
 
         return subtasks;
     }
 
-    private void processing(Value value) {
+    private Double processing(Value value) {
         String name = value.name;
         int count = value.count;
 
@@ -69,7 +67,7 @@ public class SubentropyRecursiveAction extends RecursiveAction {
         double relativeEntropy = ((double) count / dataset.getNumOfInstances()) * subdataset.getEntropy();
         value.subdataset = subdataset;
         value.relativeEntropy = relativeEntropy;
-        a.augmentEntropy(relativeEntropy);
-        a.reduceGain(dataset.getEntropy(), relativeEntropy);
+        
+        return relativeEntropy;
     }
 }

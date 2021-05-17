@@ -87,9 +87,10 @@ public class Dataset {
         for (int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
-                commonPool.invoke(new SubentropyRecursiveAction(a,i,this));
+                double relativeEntropy = commonPool.invoke(new SubentropyRecursiveTask(a,i,this));
+                a.augmentEntropy(relativeEntropy);
+                a.reduceGain(entropy, relativeEntropy);
             }
         }
-        commonPool.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

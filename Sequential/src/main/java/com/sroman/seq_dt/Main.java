@@ -12,7 +12,7 @@ public class Main {
     public static void main(String args[]) {
         //Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
-        String datasetName = "iris";//scanner.nextLine();
+        String datasetName = "titanic";//scanner.nextLine();
         System.out.println("Enter tree's max depth:");
         int maxDepth = 10;//scanner.nextInt();
 
