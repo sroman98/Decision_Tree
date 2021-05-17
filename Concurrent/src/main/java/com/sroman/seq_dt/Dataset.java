@@ -3,6 +3,7 @@ package com.sroman.seq_dt;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 public class Dataset {
@@ -58,8 +59,16 @@ public class Dataset {
     }
 
     // Used for getting max depth in main
-    public int getNumberOfAttributes() {
+    public int getNumOfAttributes() {
         return x.length;
+    }
+    
+    public int getNumOfInstances() {
+        return instances;
+    }
+    
+    public String[][] getData() {
+        return data;
     }
 
     private void calculateSystemEntropy() {
@@ -76,23 +85,13 @@ public class Dataset {
 
     private void calculateSubentropies() throws InterruptedException {
         calculateSystemEntropy();
-        ExecutorService pool = Executors.newCachedThreadPool();
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
         for (int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
-                for (Value value : a.getValues()) {
-                    pool.execute(new Subentropy(i, instances, x.length, data, value));
-                }
+                commonPool.invoke(new SubentropyRecursiveAction(a,i,this));
             }
         }
-        pool.shutdown();
-        pool.awaitTermination(10, TimeUnit.SECONDS);
-        for (Attribute a : x) {
-            double sum = 0.0;
-            for (Value value : a.getValues())
-                sum += value.relativeEntropy;
-            a.setEntropy(sum);
-            a.setGain(entropy - sum);
-        }
+        commonPool.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

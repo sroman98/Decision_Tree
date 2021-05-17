@@ -1,7 +1,6 @@
 package com.sroman.seq_dt;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Attribute {
@@ -45,8 +44,22 @@ public class Attribute {
         this.gain = gain;
     }
     
-    public void setEntropy(double entropy) {
-        this.entropy = entropy;
+//    public void setEntropy(double entropy) {
+//        this.entropy = entropy;
+//    }
+    
+    public void augmentEntropy(double relativeEntropy) {
+        if(entropy == null)
+            entropy = relativeEntropy;
+        else
+            entropy += relativeEntropy;
+    }
+    
+    public void reduceGain(double systemEntropy, double relativeEntropy) {
+        if(gain == null)
+            gain = systemEntropy - relativeEntropy;
+        else
+            gain -= relativeEntropy;
     }
 
 }

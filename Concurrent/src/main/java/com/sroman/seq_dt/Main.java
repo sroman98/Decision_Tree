@@ -12,7 +12,7 @@ public class Main {
     public static void main(String args[]) {
         //Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
-        String datasetName = "titanic";//scanner.nextLine();
+        String datasetName = "iris";//scanner.nextLine();
         System.out.println("Enter tree's max depth:");
         int maxDepth = 10;//scanner.nextInt();
 
@@ -23,8 +23,8 @@ public class Main {
     }
 
     static SimpleTreeNode createTree(Dataset dataset, int maxLevel) {
-        if (maxLevel > dataset.getNumberOfAttributes()) {
-            maxLevel = dataset.getNumberOfAttributes();
+        if (maxLevel > dataset.getNumOfAttributes()) {
+            maxLevel = dataset.getNumOfAttributes();
         }
         return recursiveEntropy(dataset, 0, maxLevel, null);
     }
