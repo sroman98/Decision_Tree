@@ -39,14 +39,6 @@ public class Attribute {
     public Double getGain() {
         return gain;
     }
-
-    public void setGain(Double gain) {
-        this.gain = gain;
-    }
-    
-//    public void setEntropy(double entropy) {
-//        this.entropy = entropy;
-//    }
     
     public void augmentEntropy(double relativeEntropy) {
         if(entropy == null)
