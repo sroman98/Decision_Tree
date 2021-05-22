@@ -1,7 +1,5 @@
 package com.sroman.seq_dt;
 
-import java.util.Objects;
-
 public class Value {
     private final String name;
     private int count;

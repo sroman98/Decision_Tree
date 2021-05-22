@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 public class Main {
 
+    private static long time = 0;
+    
     public static void main(String args[]) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
@@ -18,8 +20,11 @@ public class Main {
 
         final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
+        
         SimpleTreeNode tree = createTree(dataset, maxDepth);
         new TraditionalTreePrinter().print(new BorderTreeNodeDecorator(tree));
+        
+        System.out.println("Time spent calculating subentropies:\n" + time + " ms");
     }
 
     static SimpleTreeNode createTree(Dataset dataset, int maxLevel) {
@@ -47,6 +52,8 @@ public class Main {
             Attribute a;
             try {
                 a = dataset.getGreatestGainAttribute();
+                time += dataset.getTime();
+                
                 SimpleTreeNode node = new SimpleTreeNode(a.getName());
                 a.getValues().forEach(value -> {
                     SimpleTreeNode child = new SimpleTreeNode(value.getName());

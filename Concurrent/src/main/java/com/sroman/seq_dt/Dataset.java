@@ -11,6 +11,7 @@ public class Dataset {
     private final int instances;
 
     private Double entropy;
+    private long time = 0;
 
     public Dataset(String[][] data) {
         this.data = data;
@@ -67,6 +68,10 @@ public class Dataset {
         return data;
     }
 
+    public long getTime() {
+        return time;
+    }
+
     private void calculateSystemEntropy() {
         if (entropy != null) {
             return;
@@ -81,6 +86,7 @@ public class Dataset {
 
     private void calculateSubentropies() throws InterruptedException {
         calculateSystemEntropy();
+        long start = System.currentTimeMillis();
         for (int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
@@ -89,5 +95,7 @@ public class Dataset {
                 a.setGain(entropy-relativeEntropy);
             }
         }
+        long end = System.currentTimeMillis();
+        time = end - start;
     }
 }
