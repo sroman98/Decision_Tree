@@ -19,7 +19,7 @@ public class Attribute {
                 values.add(newValue);
             else {
                 int index = values.indexOf(newValue);
-                values.get(index).count = values.get(index).count + 1;
+                values.get(index).setCount(values.get(index).getCount() + 1);
             }
         }
     }
@@ -40,18 +40,12 @@ public class Attribute {
         return gain;
     }
     
-    public void augmentEntropy(double relativeEntropy) {
-        if(entropy == null)
-            entropy = relativeEntropy;
-        else
-            entropy += relativeEntropy;
+    public void setEntropy(double entropy) {
+        this.entropy = entropy;
     }
     
-    public void reduceGain(double systemEntropy, double relativeEntropy) {
-        if(gain == null)
-            gain = systemEntropy - relativeEntropy;
-        else
-            gain -= relativeEntropy;
+    public void setGain(double gain) {
+        this.gain = gain;
     }
 
 }

@@ -7,8 +7,9 @@ import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 
 public class SubentropyRecursiveTask extends RecursiveTask<Double> {
+
     private final int THRESHOLD = 3;
-    
+
     private final int column;
     private final Dataset dataset;
     private final Attribute a;
@@ -49,28 +50,31 @@ public class SubentropyRecursiveTask extends RecursiveTask<Double> {
     }
 
     private Double processing() {
-        for(Value value : values) {
-        String name = value.name;
-        int count = value.count;
-
-        String[][] subdata = new String[count + 1][dataset.getNumOfAttributes()];
-        String[][] dataWithoutCol = Helpers.removeCol(dataset.getData(), column);
-        subdata[0] = dataWithoutCol[0];
-
-        int indx = 1;
-        for (int i = 1; i < dataset.getData().length; i++) {
-            if (dataset.getData()[i][column].equals(name)) {
-                subdata[indx] = dataWithoutCol[i];
-                indx++;
-            }
-        }
-
-        Dataset subdataset = new Dataset(subdata);
-        double relativeEntropy = ((double) count / dataset.getNumOfInstances()) * subdataset.getEntropy();
-        value.subdataset = subdataset;
-        value.relativeEntropy = relativeEntropy;
-        }
+        double sum = 0.0;
         
-        return values.stream().mapToDouble(Value::getRelativeEntropy).sum();
+        for (Value value : values) {
+            String name = value.getName();
+            int count = value.getCount();
+
+            String[][] subdata = new String[count + 1][dataset.getNumOfAttributes()];
+            String[][] dataWithoutCol = Helpers.removeCol(dataset.getData(), column);
+            subdata[0] = dataWithoutCol[0];
+
+            int indx = 1;
+            for (int i = 1; i < dataset.getData().length; i++) {
+                if (dataset.getData()[i][column].equals(name)) {
+                    subdata[indx] = dataWithoutCol[i];
+                    indx++;
+                }
+            }
+
+            Dataset subdataset = new Dataset(subdata);
+            double relativeEntropy = ((double) count / dataset.getNumOfInstances()) * subdataset.getEntropy();
+            value.setSubdataset(subdataset);
+            value.setRelativeEntropy(relativeEntropy);
+            sum += relativeEntropy;
+        }
+
+        return sum;
     }
 }

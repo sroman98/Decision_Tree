@@ -1,8 +1,6 @@
 package com.sroman.seq_dt;
 
 import java.util.HashMap;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 
 public class Dataset {
 
@@ -44,14 +42,14 @@ public class Dataset {
 
     // Gives the unique y value (when entropy is 0)
     public String getYValue() {
-        return y.getValues().get(0).name;
+        return y.getValues().get(0).getName();
     }
 
     // Used when we don't have a unique y value and we've reached max depth
     public HashMap<String, Float> getPartialYValues() {
         HashMap<String, Float> map = new HashMap<>();
         y.getValues().forEach(value -> {
-            map.put(value.name, (float) value.count / instances);
+            map.put(value.getName(), (float) value.getCount() / instances);
         });
         return map;
     }
@@ -75,7 +73,7 @@ public class Dataset {
         }
         double res = 0.0;
         for (Value value : y.getValues()) {
-            double fraction = (double) value.count / instances;
+            double fraction = (double) value.getCount() / instances;
             res += fraction * Helpers.log2(fraction);
         }
         entropy = res * -1;
@@ -87,8 +85,8 @@ public class Dataset {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
                 double relativeEntropy = Helpers.getCommonPool().invoke(new SubentropyRecursiveTask(a,i,this));
-                a.augmentEntropy(relativeEntropy);
-                a.reduceGain(entropy, relativeEntropy);
+                a.setEntropy(relativeEntropy);
+                a.setGain(entropy-relativeEntropy);
             }
         }
     }

@@ -3,18 +3,18 @@ package com.sroman.seq_dt;
 import hu.webarticum.treeprinter.BorderTreeNodeDecorator;
 import hu.webarticum.treeprinter.SimpleTreeNode;
 import hu.webarticum.treeprinter.TraditionalTreePrinter;
-//import java.util.Scanner;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Main {
 
     public static void main(String args[]) {
-        //Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
-        String datasetName = "titanic";//scanner.nextLine();
+        String datasetName = scanner.nextLine();
         System.out.println("Enter tree's max depth:");
-        int maxDepth = 10;//scanner.nextInt();
+        int maxDepth = scanner.nextInt();
 
         final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
@@ -49,8 +49,8 @@ public class Main {
                 a = dataset.getGreatestGainAttribute();
                 SimpleTreeNode node = new SimpleTreeNode(a.getName());
                 a.getValues().forEach(value -> {
-                    SimpleTreeNode child = new SimpleTreeNode(value.name);
-                    node.addChild(recursiveEntropy(value.subdataset, iter + 1, maxLevel, child));
+                    SimpleTreeNode child = new SimpleTreeNode(value.getName());
+                    node.addChild(recursiveEntropy(value.getSubdataset(), iter + 1, maxLevel, child));
                 });
                 if (parent == null) {
                     return node;
