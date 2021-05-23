@@ -100,8 +100,10 @@ public class Dataset {
 //                a.setGain(entropy-relativeEntropy);
 //                RECURSIVE ACTION
 //                Helpers.getCommonPool().invoke(new SubentropyRecursiveAction(a,i,this));
-                for(Value value : a.getValues())
-                    pool.execute(new Subentropy(i, instances, x.length, data, value));
+//                THREAD/VALUE
+//                for(Value value : a.getValues())
+//                    pool.execute(new Subentropy(i, instances, x.length, data, value));
+                pool.execute(new SubentropyPerAttribute(a, i, instances,x.length, data, entropy));
             }
         }
 //        REGULAR THREADS
@@ -109,13 +111,14 @@ public class Dataset {
 //        ALL EXCEPT RECURSIVE TASK
         pool.awaitTermination(10, TimeUnit.SECONDS);
         
-        for (Attribute a : x) {
-            double sum = 0.0;
-            for (Value v : a.getValues())
-                sum += v.getRelativeEntropy();
-            a.setEntropy(sum);
-            a.setGain(entropy - sum);
-        }
+//        RECURSIVE ACTION & THREAD/VALUE
+//        for (Attribute a : x) {
+//            double sum = 0.0;
+//            for (Value v : a.getValues())
+//                sum += v.getRelativeEntropy();
+//            a.setEntropy(sum);
+//            a.setGain(entropy - sum);
+//        }
         
         long end = System.currentTimeMillis();
         time = end - start;
