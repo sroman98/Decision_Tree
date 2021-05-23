@@ -1,6 +1,8 @@
 package com.sroman.seq_dt;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Dataset {
@@ -88,6 +90,7 @@ public class Dataset {
     private void calculateSubentropies() throws InterruptedException {
         calculateSystemEntropy();
         long start = System.currentTimeMillis();
+        ExecutorService pool = Executors.newCachedThreadPool();
         for (int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
@@ -96,11 +99,15 @@ public class Dataset {
 //                a.setEntropy(relativeEntropy);
 //                a.setGain(entropy-relativeEntropy);
 //                RECURSIVE ACTION
-                Helpers.getCommonPool().invoke(new SubentropyRecursiveAction(a,i,this));
+//                Helpers.getCommonPool().invoke(new SubentropyRecursiveAction(a,i,this));
+                for(Value value : a.getValues())
+                    pool.execute(new Subentropy(i, instances, x.length, data, value));
             }
         }
-//        RECURSIVE ACTION
-        Helpers.getCommonPool().awaitTermination(10, TimeUnit.SECONDS);
+//        REGULAR THREADS
+        pool.shutdown();
+//        ALL EXCEPT RECURSIVE TASK
+        pool.awaitTermination(10, TimeUnit.SECONDS);
         
         for (Attribute a : x) {
             double sum = 0.0;

@@ -2,6 +2,7 @@ com/sroman/seq_dt/Main.class
 com/sroman/seq_dt/SubentropyRecursiveTask.class
 com/sroman/seq_dt/Attribute.class
 com/sroman/seq_dt/Value.class
+com/sroman/seq_dt/Subentropy.class
 com/sroman/seq_dt/Dataset.class
 com/sroman/seq_dt/SubentropyRecursiveAction.class
 com/sroman/seq_dt/Helpers.class
