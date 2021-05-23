@@ -102,8 +102,10 @@ public class Dataset {
 //                Helpers.getCommonPool().invoke(new SubentropyRecursiveAction(a,i,this));
 //                THREAD/VALUE
 //                for(Value value : a.getValues())
-//                    pool.execute(new Subentropy(i, instances, x.length, data, value));
-                pool.execute(new SubentropyPerAttribute(a, i, instances,x.length, data, entropy));
+//                    pool.execute(new SubentropyPerValue(i, instances, x.length, data, value));
+//                THREAD/ATTRIBUTE
+//                pool.execute(new SubentropyPerAttribute(a, i, instances,x.length, data, entropy));
+                (new Subentropy(a, i, instances, x.length, data, entropy)).calculate();
             }
         }
 //        REGULAR THREADS

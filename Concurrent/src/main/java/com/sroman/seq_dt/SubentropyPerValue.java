@@ -1,25 +1,22 @@
 package com.sroman.seq_dt;
 
-public class Subentropy {
-    private final Attribute a;
+public class SubentropyPerValue implements Runnable {
     private final int column;
     private final int instances;
     private final int numAttributes;
     private final String[][] data;
-    private final Double entropy;
-
-    public Subentropy(Attribute a, int column, int instances, int numAttributes, String[][] data, Double entropy) {
-        this.a = a;
+    private final Value value;
+    
+    public SubentropyPerValue(int column, int instances, int numAttributes, String[][] data, Value value) {
         this.column = column;
         this.instances = instances;
         this.numAttributes = numAttributes;
         this.data = data;
-        this.entropy = entropy;
+        this.value = value;
     }
     
-    public void calculate() {
-        double sum = 0.0;
-        for(Value value : a.getValues()) {
+    @Override
+    public void run() {
             String name = value.getName();
             int count = value.getCount();
             
@@ -39,10 +36,5 @@ public class Subentropy {
             double relativeEntropy = ((double)count/instances) * subdataset.getEntropy();
             value.setSubdataset(subdataset);
             value.setRelativeEntropy(relativeEntropy);
-            
-            sum += relativeEntropy;
-        }
-        a.setEntropy(sum);
-        a.setGain(entropy - sum);
     }
 }
