@@ -1,6 +1,7 @@
 package com.sroman.seq_dt;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Dataset {
 
@@ -90,11 +91,25 @@ public class Dataset {
         for (int i = 0; i < x.length; i++) {
             Attribute a = x[i];
             if (a.getEntropy() == null) {
-                double relativeEntropy = Helpers.getCommonPool().invoke(new SubentropyRecursiveTask(a,i,this));
-                a.setEntropy(relativeEntropy);
-                a.setGain(entropy-relativeEntropy);
+//                RECURSIVE TASK
+//                double relativeEntropy = Helpers.getCommonPool().invoke(new SubentropyRecursiveTask(a,i,this));
+//                a.setEntropy(relativeEntropy);
+//                a.setGain(entropy-relativeEntropy);
+//                RECURSIVE ACTION
+                Helpers.getCommonPool().invoke(new SubentropyRecursiveAction(a,i,this));
             }
         }
+//        RECURSIVE ACTION
+        Helpers.getCommonPool().awaitTermination(10, TimeUnit.SECONDS);
+        
+        for (Attribute a : x) {
+            double sum = 0.0;
+            for (Value v : a.getValues())
+                sum += v.getRelativeEntropy();
+            a.setEntropy(sum);
+            a.setGain(entropy - sum);
+        }
+        
         long end = System.currentTimeMillis();
         time = end - start;
     }
