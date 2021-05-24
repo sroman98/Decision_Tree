@@ -2,9 +2,11 @@ com/sroman/seq_dt/SubentropyPerAttribute.class
 com/sroman/seq_dt/Main.class
 com/sroman/seq_dt/SubentropyRecursiveTask.class
 com/sroman/seq_dt/Attribute.class
+com/sroman/seq_dt/Dataset$1.class
 com/sroman/seq_dt/Value.class
 com/sroman/seq_dt/Subentropy.class
 com/sroman/seq_dt/SubentropyPerValue.class
 com/sroman/seq_dt/Dataset.class
 com/sroman/seq_dt/SubentropyRecursiveAction.class
 com/sroman/seq_dt/Helpers.class
+com/sroman/seq_dt/Approach.class

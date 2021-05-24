@@ -10,14 +10,38 @@ import java.util.logging.Logger;
 public class Main {
 
     private static long time = 0;
-    
+
+    public static Approach approach;
+
     public static void main(String args[]) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter dataset's name:");
         String datasetName = scanner.nextLine();
-        System.out.println("Enter tree's max depth:");
+        System.out.println("\nEnter tree's max depth:");
         int maxDepth = scanner.nextInt();
 
+        System.out.println("\nMENU");
+        System.out.println("1. Thread per attribute");
+        System.out.println("2. Thread per value");
+        System.out.println("3. ForkJoin - RecursiveAction");
+        System.out.println("4. ForkJoin - RecursiveTask");
+        System.out.println("Enter the concurrent approach to take:");
+        int approachIndex = scanner.nextInt();
+
+        switch (approachIndex) {
+            case 1:
+                approach = Approach.PER_ATTRIBUTE;
+                break;
+            case 2:
+                approach = Approach.PER_VALUE;
+                break;
+            case 4:
+                approach = Approach.RECURSIVE_TASK;
+                break;
+            default:
+                approach = Approach.RECURSIVE_ACTION;
+        }
+        
         final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
         
@@ -26,6 +50,8 @@ public class Main {
         
         System.out.println("Time spent calculating subentropies:\n" + time + " ms");
     }
+
+    
 
     static SimpleTreeNode createTree(Dataset dataset, int maxLevel) {
         if (maxLevel > dataset.getNumOfAttributes()) {
@@ -53,7 +79,7 @@ public class Main {
             try {
                 a = dataset.getGreatestGainAttribute();
                 time += dataset.getTime();
-                
+
                 SimpleTreeNode node = new SimpleTreeNode(a.getName());
                 a.getValues().forEach(value -> {
                     SimpleTreeNode child = new SimpleTreeNode(value.getName());
