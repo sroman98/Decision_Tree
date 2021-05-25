@@ -42,7 +42,7 @@ public class Main {
                 approach = Approach.RECURSIVE_ACTION;
         }
         
-        final String[][] data = Helpers.getMatrixFromCSV("classes/" + datasetName + ".csv");
+        final String[][] data = Helpers.getMatrixFromCSV("src/main/java/com/sroman/concurrenttrees/ds/" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
         
         SimpleTreeNode tree = createTree(dataset, maxDepth);
