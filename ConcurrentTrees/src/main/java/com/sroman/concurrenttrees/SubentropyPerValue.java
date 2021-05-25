@@ -1,4 +1,4 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
 public class SubentropyPerValue implements Runnable {
     private final int column;

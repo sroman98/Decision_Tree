@@ -1,4 +1,4 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
 enum Approach {
     PER_ATTRIBUTE,

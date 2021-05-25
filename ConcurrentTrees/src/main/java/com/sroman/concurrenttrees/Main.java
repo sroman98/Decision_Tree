@@ -1,4 +1,4 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
 import hu.webarticum.treeprinter.BorderTreeNodeDecorator;
 import hu.webarticum.treeprinter.SimpleTreeNode;
@@ -42,7 +42,7 @@ public class Main {
                 approach = Approach.RECURSIVE_ACTION;
         }
         
-        final String[][] data = Helpers.getMatrixFromCSV("../" + datasetName + ".csv");
+        final String[][] data = Helpers.getMatrixFromCSV("classes/" + datasetName + ".csv");
         Dataset dataset = new Dataset(data);
         
         SimpleTreeNode tree = createTree(dataset, maxDepth);

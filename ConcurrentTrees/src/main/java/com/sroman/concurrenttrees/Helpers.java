@@ -1,4 +1,4 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -1,6 +1,6 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
-public class SubentropyPerAttribute implements Runnable {
+public class Subentropy {
     private final Attribute a;
     private final int column;
     private final int instances;
@@ -8,7 +8,7 @@ public class SubentropyPerAttribute implements Runnable {
     private final String[][] data;
     private final Double entropy;
 
-    public SubentropyPerAttribute(Attribute a, int column, int instances, int numAttributes, String[][] data, Double entropy) {
+    public Subentropy(Attribute a, int column, int instances, int numAttributes, String[][] data, Double entropy) {
         this.a = a;
         this.column = column;
         this.instances = instances;
@@ -17,8 +17,7 @@ public class SubentropyPerAttribute implements Runnable {
         this.entropy = entropy;
     }
     
-    @Override
-    public void run() {
+    public void calculate() {
         double sum = 0.0;
         for(Value value : a.getValues()) {
             String name = value.getName();

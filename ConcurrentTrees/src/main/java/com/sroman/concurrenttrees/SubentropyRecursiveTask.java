@@ -1,27 +1,28 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.RecursiveTask;
 
-public class SubentropyRecursiveAction extends RecursiveAction {
+public class SubentropyRecursiveTask extends RecursiveTask<Double> {
 
     private final int THRESHOLD = 3;
-    
+
     private final int column;
     private final Dataset dataset;
     private final Attribute a;
     private final List<Value> values;
 
-    public SubentropyRecursiveAction(Attribute a, int column, Dataset dataset) {
+    public SubentropyRecursiveTask(Attribute a, int column, Dataset dataset) {
         this.a = a;
         this.column = column;
         this.dataset = dataset;
         this.values = a.getValues();
     }
 
-    public SubentropyRecursiveAction(SubentropyRecursiveAction s, List<Value> values) {
+    public SubentropyRecursiveTask(SubentropyRecursiveTask s, List<Value> values) {
         this.a = s.a;
         this.column = s.column;
         this.dataset = s.dataset;
@@ -29,26 +30,28 @@ public class SubentropyRecursiveAction extends RecursiveAction {
     }
 
     @Override
-    protected void compute() {
+    protected Double compute() {
         if (values.size() > THRESHOLD) {
-            ForkJoinTask.invokeAll(createSubtasks());
+            return ForkJoinTask.invokeAll(createSubtasks()).stream().mapToDouble(ForkJoinTask::join).sum();
         } else {
-            processing();
+            return processing();
         }
     }
 
-    private List<SubentropyRecursiveAction> createSubtasks() {
-        List<SubentropyRecursiveAction> subtasks = new ArrayList<>();
+    private Collection<SubentropyRecursiveTask> createSubtasks() {
+        List<SubentropyRecursiveTask> subtasks = new ArrayList<>();
 
         int mid = values.size() / 2;
 
-        subtasks.add(new SubentropyRecursiveAction(this, values.subList(0, mid)));
-        subtasks.add(new SubentropyRecursiveAction(this, values.subList(mid, values.size())));
+        subtasks.add(new SubentropyRecursiveTask(this, values.subList(0, mid)));
+        subtasks.add(new SubentropyRecursiveTask(this, values.subList(mid, values.size())));
 
         return subtasks;
     }
 
-    private void processing() {
+    private Double processing() {
+        double sum = 0.0;
+        
         for (Value value : values) {
             String name = value.getName();
             int count = value.getCount();
@@ -69,6 +72,9 @@ public class SubentropyRecursiveAction extends RecursiveAction {
             double relativeEntropy = ((double) count / dataset.getNumOfInstances()) * subdataset.getEntropy();
             value.setSubdataset(subdataset);
             value.setRelativeEntropy(relativeEntropy);
+            sum += relativeEntropy;
         }
+
+        return sum;
     }
 }

@@ -1,4 +1,4 @@
-package com.sroman.seq_dt;
+package com.sroman.concurrenttrees;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;

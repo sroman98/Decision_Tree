@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath com.sroman.seq_dt.Main</exec.args>
+                <exec.args>-classpath %classpath com.sroman.concurrenttrees.Main</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
